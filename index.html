@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quiz de Álgebra y Funciones · Alcaraván</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="vendor/jsxgraph/jsxgraph.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="vendor/mathlive/mathlive.min.js" defer></script>
+  <script src="vendor/jsxgraph/jsxgraphcore.js" defer></script>
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <header class="barra">
+    <span class="logo" aria-hidden="true">🪶</span>
+    <h1>Quiz de Álgebra y Funciones</h1>
+  </header>
+
+  <main>
+    <!-- Pantalla 1: inicio -->
+    <section id="pantalla-inicio" class="pantalla">
+      <h2>Elige tu nivel</h2>
+      <p class="sub">10 preguntas por nivel. Cada una tiene 2 intentos.</p>
+      <div class="niveles">
+        <button class="btn nivel" data-nivel="1">Nivel 1 · Básico</button>
+        <button class="btn nivel" data-nivel="2">Nivel 2 · Intermedio</button>
+        <button class="btn nivel" data-nivel="3">Nivel 3 · Avanzado</button>
+      </div>
+      <p class="record">Récord: <strong id="record-inicio">0</strong></p>
+    </section>
+
+    <!-- Pantalla 2: ejercicio -->
+    <section id="pantalla-ejercicio" class="pantalla" hidden>
+      <div class="progreso" role="progressbar" aria-label="Progreso del quiz"
+           aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div id="barra-progreso"></div>
+      </div>
+      <p id="contador" class="sub"></p>
+
+      <div class="ejercicio">
+        <div class="panel">
+          <p id="tipo" class="etiqueta"></p>
+          <math-field id="enunciado" read-only></math-field>
+
+          <label for="respuesta">Tu respuesta</label>
+          <math-field id="respuesta"></math-field>
+
+          <div class="acciones">
+            <button id="comprobar" class="btn primario" disabled>Comprobar</button>
+            <button id="pista" class="btn">Pista</button>
+          </div>
+
+          <p id="pista-texto" class="pista" hidden></p>
+          <p id="feedback" class="feedback" role="status" aria-live="polite" hidden></p>
+
+          <div id="solucion" hidden>
+            <p>Solución:</p>
+            <math-field id="solucion-latex" read-only></math-field>
+            <p id="explicacion"></p>
+          </div>
+
+          <button id="siguiente" class="btn primario" hidden>Siguiente →</button>
+        </div>
+
+        <div class="panel grafica">
+          <div id="box" class="jxgbox"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pantalla 3: resultados -->
+    <section id="pantalla-resultados" class="pantalla" hidden>
+      <h2>Resultados</h2>
+      <p class="puntaje"><strong id="res-aciertos">0</strong> de <strong id="res-total">0</strong> correctas</p>
+      <p class="record">Récord: <strong id="res-record">0</strong></p>
+      <h3>Preguntas falladas</h3>
+      <ul id="lista-falladas" class="falladas"></ul>
+      <button id="reiniciar" class="btn primario">Volver al inicio</button>
+    </section>
+  </main>
+</body>
+</html>
