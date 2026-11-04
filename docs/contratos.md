@@ -30,3 +30,11 @@ tipo = "evaluar" | "simplificar" | "factorizar" | "pendiente"
 - Cada módulo exporta SOLO estas funciones.
 - Nadie edita el archivo de otro módulo.
 - Cambiar un contrato exige avisar al líder y actualizar este archivo.
+
+## Decisiones técnicas (líder)
+- Las librerías están en `vendor/` y se usan sin internet. Compute Engine es la versión 0.173.0.
+- Importar Compute Engine en `correccion.js` así:
+  `import { compile } from "../../vendor/compute-engine/compute-engine.js";`
+- Los intentos (máximo 2) los controla `main.js`. Se llama a `registrar(app, resultado, pregunta)` UNA sola vez por pregunta, con `resultado.intentos`.
+- La API de la versión 0.173.0 puede diferir de la del documento (0.153): probar `expr.unknowns`, `expr.isValid` y `compile` antes de asumir.
+- Probar la app con `python3 -m http.server 8000`, no con doble clic.
