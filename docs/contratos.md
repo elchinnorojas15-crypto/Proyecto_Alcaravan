@@ -48,3 +48,13 @@ tipo = "evaluar" | "simplificar" | "factorizar" | "pendiente"
 - registrarPista(app): cuenta una pista usada en la pregunta actual. main.js la llama al pulsar "Pista".
 - registrar(app, resultado, pregunta): descuenta 2 puntos por pista usada, sin bajar de 0 los puntos de esa pregunta.
 - obtenerResumen(app) -> { puntaje, aciertos, total, record, nuevoRecord }
+
+## Contrato v2 (semana 2)
+
+### banco.js
+- obtenerPreguntas(nivel) devuelve las preguntas en orden aleatorio y sin repetir.
+
+### progreso.js
+- registrarPista(app): cuenta una pista usada en la pregunta actual. main.js la llama al pulsar "Pista".
+- registrar(app, resultado, pregunta): descuenta 2 puntos por pista usada, sin bajar de 0 los puntos de esa pregunta.
+- obtenerResumen(app) -> { puntaje, aciertos, total, record, nuevoRecord }
