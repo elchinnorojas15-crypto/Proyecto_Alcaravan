@@ -1,16 +1,32 @@
 :root {
-  --color-fondo: #f6f1e7;
+  /* Fondo general: cambiamos el beige antiguo por el menta claro del boceto */
+  --color-fondo: #eef6f1;
   --color-superficie: #ffffff;
-  --color-texto: #2b2a26;
-  --color-suave: #6b675c;
-  --color-primario: #2f6f4e;
-  --color-primario-oscuro: #1f5037;
+  
+  /* Textos: oscurecidos para asegurar el contraste mínimo de 4.5:1 exigido */
+  --color-texto: #1a1a1a;
+  --color-suave: #595959;
+  
+  /* Verdes institucionales extraídos del boceto */
+  --color-primario: #235e3d;
+  --color-primario-oscuro: #143d26;
+  
+  /* Colores de alertas (mantenemos la lógica de la rúbrica) */
   --color-acento: #d98e04;
   --color-ok: #1b7a43;
   --color-error: #b3261e;
   --color-aviso: #8a5a00;
+  
   --radio: 12px;
-  --fuente: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  
+  /* Tipografía: añadimos la fuente clásica para los títulos matemáticos */
+  --fuente: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  --fuente-titulos: "Georgia", "Times New Roman", serif;
+}
+
+/* Regla complementaria para que los títulos usen la fuente nueva */
+h1, h2, h3 {
+  font-family: var(--fuente-titulos);
 }
 
 * { box-sizing: border-box; }
