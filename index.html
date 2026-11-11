@@ -1,83 +1,144 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quiz de Álgebra y Funciones · Alcaraván</title>
-  <link rel="icon" href="data:,">
-  <link rel="stylesheet" href="vendor/jsxgraph/jsxgraph.css">
-  <link rel="stylesheet" href="css/styles.css">
-  <script src="vendor/mathlive/mathlive.min.js" defer></script>
-  <script src="vendor/jsxgraph/jsxgraphcore.js" defer></script>
-  <script type="module" src="js/main.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alcaraván · Álgebra y Funciones</title>
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="vendor/jsxgraph/jsxgraph.css">
 </head>
 <body>
-  <header class="barra">
-    <span class="logo" aria-hidden="true">🪶</span>
-    <h1>Quiz de Álgebra y Funciones</h1>
-  </header>
 
-  <main>
-    <!-- Pantalla 1: inicio -->
-    <section id="pantalla-inicio" class="pantalla">
-      <h2>Elige tu nivel</h2>
-      <p class="sub">10 preguntas por nivel. Cada una tiene 2 intentos.</p>
-      <div class="niveles">
-        <button class="btn nivel" data-nivel="1">Nivel 1 · Básico</button>
-        <button class="btn nivel" data-nivel="2">Nivel 2 · Intermedio</button>
-        <button class="btn nivel" data-nivel="3">Nivel 3 · Avanzado</button>
-      </div>
-      <p class="record">Récord: <strong id="record-inicio">0</strong></p>
-    </section>
+<header class="top">
+  <div class="top-in">
+    <button type="button" class="marca" id="marca" aria-label="Alcaraván Álgebra y Funciones, ir al inicio">
+      <svg viewBox="0 0 36 36" aria-hidden="true"><rect width="36" height="36" rx="10" fill="#ff6a00"/><path d="M8 24c6-1 9-6 11-13 1 5 4 8 9 9-5 1-8 4-9 8-1-3-5-4-11-4z" fill="#05203c"/></svg>
+      <span><b>Alcaraván · Álgebra y Funciones</b><small>Con el Parque Tecnológico</small></span>
+    </button>
+    <span class="badge">Proyecto 4 · Quiz</span>
+  </div>
+</header>
 
-    <!-- Pantalla 2: ejercicio -->
-    <section id="pantalla-ejercicio" class="pantalla" hidden>
-      <div class="progreso" role="progressbar" aria-label="Progreso del quiz"
-           aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-        <div id="barra-progreso"></div>
-      </div>
-      <p id="contador" class="sub"></p>
+<main>
 
-      <div class="ejercicio">
-        <div class="panel">
-          <p id="tipo" class="etiqueta"></p>
-          <math-field id="enunciado" read-only></math-field>
+  <!-- 1. INICIO -->
+  <section id="pantalla-inicio" aria-labelledby="titulo-inicio">
+    <div class="hero">
+      <svg viewBox="0 0 400 400" fill="none" aria-hidden="true"><path d="M50 0C120 80 200 120 350 70C380 60 400 120 400 400H0V0H50Z" fill="#05203c"/><path d="M220 0C280 140 310 220 400 190V400H200C260 300 180 150 220 0Z" fill="#ff6a00"/></svg>
+      <span class="chip">Álgebra y funciones</span>
+      <h1 id="titulo-inicio">Elige tu nivel</h1>
+      <p>10 preguntas por nivel. Cada una tiene 2 intentos, pista y una gráfica que te muestra el resultado.</p>
+    </div>
 
-          <label for="respuesta">Tu respuesta</label>
-          <math-field id="respuesta"></math-field>
+    <div class="card record">
+      <div class="record-ico" aria-hidden="true">★</div>
+      <div><b>Tu récord: <span id="record-inicio">0</span> pts</b><p>Se guarda en este dispositivo.</p></div>
+    </div>
 
+    <ul class="leyenda" aria-label="Cómo se indica el resultado">
+      <li><span class="ico-ok" aria-hidden="true">✔</span> Respuesta correcta</li>
+      <li><span class="ico-warn" aria-hidden="true">⚠</span> Te queda un intento</li>
+      <li><span class="ico-err" aria-hidden="true">✖</span> Respuesta incorrecta</li>
+    </ul>
+
+    <p id="aviso-nivel" class="feedback aviso" role="alert" hidden></p>
+
+    <div class="niveles">
+      <article class="card nivel-card">
+        <div class="cab">
+          <div class="nivel-ico"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M4 28h24M4 28V4" stroke-width="2"/><path d="M4 24 24 8"/><circle cx="14" cy="16" r="2.5" fill="currentColor"/></svg></div>
+          <span class="chip">Dificultad 1 de 3</span>
+        </div>
+        <h2>Nivel 1 · Básico</h2>
+        <p>Evaluar funciones, simplificar expresiones y factorizar lo esencial.</p>
+        <ul><li class="chip">Evaluar</li><li class="chip">Simplificar</li><li class="chip">Factorizar</li></ul>
+        <button type="button" class="btn btn-sec nivel" data-nivel="1">Empezar nivel 1</button>
+      </article>
+
+      <article class="card nivel-card destacado">
+        <div class="cab">
+          <div class="nivel-ico"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M4 24h24" stroke-width="2"/><path d="M6 8C11 26 21 26 26 8"/><circle cx="16" cy="21.5" r="2.5" fill="currentColor"/></svg></div>
+          <span class="chip solido">Dificultad 2 de 3</span>
+        </div>
+        <h2>Nivel 2 · Intermedio</h2>
+        <p>Productos notables, polinomios y rectas con pendiente.</p>
+        <ul><li class="chip">Simplificar</li><li class="chip">Factorizar</li><li class="chip">Pendiente</li></ul>
+        <button type="button" class="btn btn-primary nivel" data-nivel="2">Empezar nivel 2</button>
+      </article>
+
+      <article class="card nivel-card">
+        <div class="cab">
+          <div class="nivel-ico"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M4 28h24M4 28V4" stroke-width="2"/><path d="M5 24C10 24 11 8 16 8s6 16 11 16"/></svg></div>
+          <span class="chip solido">Dificultad 3 de 3</span>
+        </div>
+        <h2>Nivel 3 · Avanzado</h2>
+        <p>Expresiones más largas que mezclan varias técnicas.</p>
+        <ul><li class="chip">Factorizar</li><li class="chip">Simplificar</li><li class="chip">Pendiente</li></ul>
+        <button type="button" class="btn btn-sec nivel" data-nivel="3">Empezar nivel 3</button>
+      </article>
+    </div>
+  </section>
+
+  <!-- 2. EJERCICIO -->
+  <section id="pantalla-ejercicio" aria-label="Ejercicio" hidden>
+    <div class="estado">
+      <span id="contador">Pregunta 1 de 10</span>
+      <div class="progreso" role="progressbar" aria-label="Progreso del quiz" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="barra-progreso" class="barra"></div></div>
+      <span>★ <span id="puntaje">0</span> pts</span>
+      <span id="intento" class="pill">Intento 1 de 2</span>
+    </div>
+
+    <div class="ejercicio">
+      <div class="col">
+        <article class="card">
+          <span class="chip solido" id="tipo">evaluar</span>
+          <h2>Resuelve</h2>
+          <math-field id="enunciado" read-only aria-label="Enunciado de la pregunta"></math-field>
+          <div class="acciones"><button type="button" id="pista" class="btn btn-ghost">💡 Ver pista</button></div>
+          <p id="pista-texto" class="pista-texto" hidden></p>
+        </article>
+
+        <article class="card">
+          <span class="etiqueta" id="lbl-respuesta">Tu respuesta</span>
+          <math-field id="respuesta" aria-labelledby="lbl-respuesta"></math-field>
           <div class="acciones">
-            <button id="comprobar" class="btn primario" disabled>Comprobar</button>
-            <button id="pista" class="btn">Pista</button>
+            <button type="button" id="comprobar" class="btn btn-primary" disabled>Comprobar</button>
+            <button type="button" id="siguiente" class="btn btn-sec" hidden>Siguiente →</button>
           </div>
-
-          <p id="pista-texto" class="pista" hidden></p>
-          <p id="feedback" class="feedback" role="status" aria-live="polite" hidden></p>
-
+          <p id="feedback" class="feedback" role="status" hidden></p>
           <div id="solucion" hidden>
-            <p>Solución:</p>
-            <math-field id="solucion-latex" read-only></math-field>
+            <h3>Solución</h3>
+            <math-field id="solucion-latex" read-only aria-label="Solución"></math-field>
             <p id="explicacion"></p>
           </div>
-
-          <button id="siguiente" class="btn primario" hidden>Siguiente →</button>
-        </div>
-
-        <div class="panel grafica">
-          <div id="box" class="jxgbox"></div>
-        </div>
+        </article>
       </div>
-    </section>
 
-    <!-- Pantalla 3: resultados -->
-    <section id="pantalla-resultados" class="pantalla" hidden>
-      <h2>Resultados</h2>
-      <p class="puntaje"><strong id="res-aciertos">0</strong> de <strong id="res-total">0</strong> correctas</p>
-      <p class="record">Récord: <strong id="res-record">0</strong></p>
-      <h3>Preguntas falladas</h3>
-      <ul id="lista-falladas" class="falladas"></ul>
-      <button id="reiniciar" class="btn primario">Volver al inicio</button>
-    </section>
-  </main>
+      <aside class="card grafica" aria-label="Gráfica de la pregunta">
+        <h2>Gráfica</h2>
+        <div id="box" class="jxgbox"></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 3. RESULTADOS -->
+  <section id="pantalla-resultados" aria-labelledby="titulo-res" hidden>
+    <div class="card resumen">
+      <h2 id="titulo-res">Resultados</h2>
+      <p class="grande"><span id="res-aciertos">0</span> de <span id="res-total">0</span> correctas</p>
+      <p>Tu récord: <b><span id="res-record">0</span> pts</b></p>
+      <h3>Preguntas para repasar</h3>
+      <ul id="lista-falladas"></ul>
+      <button type="button" id="reiniciar" class="btn btn-primary">Volver al inicio</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>Alcaraván · Álgebra y Funciones · Proyecto 4 · Hecho con MathLive, Compute Engine y JSXGraph</footer>
+
+<script src="vendor/mathlive/mathlive.min.js" defer></script>
+<script src="vendor/jsxgraph/jsxgraphcore.js" defer></script>
+<script type="module" src="js/main.js"></script>
 </body>
 </html>
