@@ -39,12 +39,15 @@ function feedback(tipo, texto) {
 
 function empezar(nivel) {
   app.nivel = nivel;
+  $("aviso-nivel").hidden = true;
   app.preguntas = banco.obtenerPreguntas(nivel);
   app.indice = 0;
   app.aciertos = 0;
   app.falladas = [];
+  app.puntaje = 0;
   if (!app.preguntas.length) {
-    alert("Este nivel aún no tiene preguntas.");
+    $("aviso-nivel").textContent = "⚠ Este nivel aún no tiene preguntas. Prueba con otro nivel.";
+    $("aviso-nivel").hidden = false;
     return;
   }
   mostrarPantalla("ejercicio");
@@ -56,6 +59,13 @@ function empezar(nivel) {
     graficaIniciada = true;
   }
   cargarPregunta();
+}
+
+function actualizarEstado(fin = false) {
+  $("puntaje").textContent = app.puntaje ?? 0;
+  $("intento").textContent = fin
+    ? `${app.intentos} de ${MAX_INTENTOS} intentos usados`
+    : `Intento ${Math.min(app.intentos + 1, MAX_INTENTOS)} de ${MAX_INTENTOS}`;
 }
 
 function cargarPregunta() {
@@ -79,12 +89,14 @@ function cargarPregunta() {
   $("solucion").hidden = true;
   $("siguiente").hidden = true;
 
+  actualizarEstado();
   grafica.mostrarPregunta(app, app.pregunta);
   $("respuesta").focus();
 }
 
 function terminarPregunta(resultado) {
   progreso.registrar(app, { ...resultado, intentos: app.intentos }, app.pregunta);
+  actualizarEstado(true);
   $("comprobar").disabled = true;
   $("respuesta").disabled = true;
   $("siguiente").textContent = app.indice === app.preguntas.length - 1 ? "Ver resultados →" : "Siguiente →";
@@ -116,6 +128,7 @@ function comprobar() {
     terminarPregunta(r);
   } else {
     feedback("error", `${r.mensaje} Te queda ${MAX_INTENTOS - app.intentos} intento.`);
+    actualizarEstado();
   }
 }
 
@@ -158,6 +171,7 @@ document.querySelectorAll(".nivel").forEach((b) =>
 $("comprobar").addEventListener("click", comprobar);
 $("siguiente").addEventListener("click", siguiente);
 $("reiniciar").addEventListener("click", volverInicio);
+$("marca").addEventListener("click", volverInicio);
 $("pista").addEventListener("click", () => {
   $("pista-texto").textContent = `💡 ${app.pregunta.pista || "Sin pista para esta pregunta."}`;
   $("pista-texto").hidden = false;
