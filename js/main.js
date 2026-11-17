@@ -70,7 +70,9 @@ function actualizarEstado(fin = false) {
 
 function cargarPregunta() {
   const total = app.preguntas.length;
+  if (app.indice === 0) app.historial = [];
   app.pregunta = app.preguntas[app.indice];
+  app.vista = app.indice;
   app.intentos = 0;
 
   $("contador").textContent = `Pregunta ${app.indice + 1} de ${total}`;
@@ -87,6 +89,7 @@ function cargarPregunta() {
   $("pista-texto").hidden = true;
   $("feedback").hidden = true;
   $("solucion").hidden = true;
+  $("anterior").hidden = true;
   $("siguiente").hidden = true;
 
   actualizarEstado();
@@ -94,12 +97,14 @@ function cargarPregunta() {
   $("respuesta").focus();
 }
 
-function terminarPregunta(resultado) {
+function terminarPregunta(resultado, latex) {
   progreso.registrar(app, { ...resultado, intentos: app.intentos }, app.pregunta);
+  app.historial[app.indice] = { respuesta: latex, ok: resultado.ok, intentos: app.intentos, resultado };
   actualizarEstado(true);
   $("comprobar").disabled = true;
   $("respuesta").disabled = true;
   $("siguiente").textContent = app.indice === app.preguntas.length - 1 ? "Ver resultados →" : "Siguiente →";
+  $("anterior").hidden = app.indice === 0;
   $("siguiente").hidden = false;
   $("siguiente").focus();
 }
@@ -118,21 +123,72 @@ function comprobar() {
   if (r.ok) {
     app.aciertos++;
     feedback("ok", r.mensaje);
-    terminarPregunta(r);
+    terminarPregunta(r, latex);
   } else if (app.intentos >= MAX_INTENTOS) {
     app.falladas.push(app.pregunta);
     feedback("error", "Sin intentos. Esta es la solución:");
     $("solucion-latex").setValue(app.pregunta.solucion);
     $("explicacion").textContent = app.pregunta.explicacion || "";
     $("solucion").hidden = false;
-    terminarPregunta(r);
+    terminarPregunta(r, latex);
   } else {
     feedback("error", `${r.mensaje} Te queda ${MAX_INTENTOS - app.intentos} intento.`);
     actualizarEstado();
   }
 }
 
+// Modo repaso: muestra una pregunta ya contestada sin puntuar ni registrar nada
+function mostrarRevision(i) {
+  const total = app.preguntas.length;
+  const p = app.preguntas[i];
+  const reg = app.historial[i];
+  app.vista = i;
+
+  $("contador").textContent = `Pregunta ${i + 1} de ${total}`;
+  const pct = (i / total) * 100;
+  $("barra-progreso").style.width = `${pct}%`;
+  document.querySelector(".progreso").setAttribute("aria-valuenow", Math.round(pct));
+
+  $("tipo").textContent = p.tipo;
+  $("enunciado").setValue(p.enunciado);
+  $("respuesta").setValue(reg.respuesta);
+  $("respuesta").disabled = true;
+  $("comprobar").disabled = true;
+  $("pista").disabled = true;
+  $("pista-texto").hidden = true;
+  $("intento").textContent = `${reg.intentos} de ${MAX_INTENTOS} intentos usados`;
+
+  if (reg.ok) {
+    feedback("ok", "¡Correcto!");
+    $("solucion").hidden = true;
+  } else {
+    feedback("error", "No acertaste esta pregunta. Esta es la solución:");
+    $("solucion-latex").setValue(p.solucion);
+    $("explicacion").textContent = p.explicacion || "";
+    $("solucion").hidden = false;
+  }
+
+  $("anterior").hidden = i === 0;
+  $("siguiente").textContent = i === total - 1 ? "Ver resultados →" : "Siguiente →";
+  $("siguiente").hidden = false;
+
+  grafica.mostrarPregunta(app, p);
+  grafica.mostrarRespuesta(app, reg.respuesta, reg.resultado);
+}
+
+function anterior() {
+  if (app.vista <= 0) return;
+  mostrarRevision(app.vista - 1);
+  ($("anterior").hidden ? $("siguiente") : $("anterior")).focus();
+}
+
 function siguiente() {
+  // Repasando preguntas ya contestadas: avanza sin puntuar
+  if (app.vista < app.indice) {
+    mostrarRevision(app.vista + 1);
+    $("siguiente").focus();
+    return;
+  }
   app.indice++;
   if (app.indice >= app.preguntas.length) return mostrarResultados();
   cargarPregunta();
@@ -169,6 +225,7 @@ volverInicio();
 document.querySelectorAll(".nivel").forEach((b) =>
   b.addEventListener("click", () => empezar(Number(b.dataset.nivel))));
 $("comprobar").addEventListener("click", comprobar);
+$("anterior").addEventListener("click", anterior);
 $("siguiente").addEventListener("click", siguiente);
 $("reiniciar").addEventListener("click", volverInicio);
 $("marca").addEventListener("click", volverInicio);
