@@ -1,12 +1,18 @@
-// Módulo 4: Progreso y Récord
-
-// main.js llama a registrar() una vez por pregunta cuando el usuario responde o agota sus intentos.
+// ==========================================
+// Módulo 4: Progreso y Récord (Contrato v2)
+// ==========================================
+// main.js llama a registrar() una vez por pregunta, 
+// registrarPista() cuando se usa una pista, y obtenerResumen() al finalizar.
 
 const CLAVE_RECORD = "alcaravan_record"; // Clave fija exigida para localStorage
-const PUNTOS_PRIMER_INTENTO = 10;        // Puntos si acierta al 1er intento
-const PUNTOS_SEGUNDO_INTENTO = 5;        // Puntos si acierta al 2do intento
+const PUNTOS_PRIMER_INTENTO = 10;        // Puntos base si acierta al 1er intento
+const PUNTOS_SEGUNDO_INTENTO = 5;        // Puntos base si acierta al 2do intento
+const PENALIZACION_PISTA = 2;            // Puntos que resta cada pista usada
 
-let puntaje = 0; // Acumulador del puntaje de la partida actual
+let puntaje = 0;      // Acumulador del puntaje de la partida actual
+let aciertos = 0;     // Contador de respuestas correctas
+let pistasActuales = 0; // Conteo de pistas usadas en la pregunta en curso
+let esNuevoRecord = false; // Bandera para indicar si se rompió el récord en la partida
 
 /**
  * Inicializa o reinicia el módulo al comenzar una partida o nivel.
@@ -14,12 +20,24 @@ let puntaje = 0; // Acumulador del puntaje de la partida actual
  */
 export function iniciar(app) {
     puntaje = 0;
+    aciertos = 0;
+    pistasActuales = 0;
+    esNuevoRecord = false;
     app.puntaje = 0;
+    app.aciertos = 0;
+}
+
+/**
+ * Registra que el usuario ha solicitado una pista para la pregunta actual.
+ * @param {Object} app - Objeto compartido de la aplicación.
+ */
+export function registrarPista(app) {
+    pistasActuales++;
 }
 
 /**
  * Obtiene el récord guardado en el navegador de forma persistente.
- * Si no existe o hay restricciones (ej. modo incógnito), devuelve 0
+ * Si no existe o hay restricciones (ej. modo incógnito), devuelve 0.
  * @returns {number} Récord actual.
  */
 export function obtenerRecord() {
@@ -45,31 +63,60 @@ function guardarRecord(valor) {
 
 /**
  * Registra el resultado de la pregunta actual, actualiza el puntaje 
- * y evalúa si se rompió el récord.
+ * aplicando penalización por pistas y evalúa si se rompió el récord.
  * @param {Object} app - Objeto compartido (usa app.indice para detectar juegos nuevos).
  * @param {Object} resultado - Contiene { ok, valida, mensaje, intentos }.
  * @param {Object} pregunta - Datos de la pregunta evaluada.
  */
 export function registrar(app, resultado, pregunta) {
-    // Si estamos en la primera pregunta (indice 0), reiniciamos el puntaje de la partida.
+    // Si estamos en la primera pregunta (indice 0), reiniciamos contadores de la partida.
     if (app.indice === 0) {
         puntaje = 0;
+        aciertos = 0;
+        esNuevoRecord = false;
     }
 
-    // Si la respuesta fue correcta (ok: true), sumamos puntos según los intentos usados
+    // Si la respuesta fue correcta (ok: true)
     if (resultado && resultado.ok) {
-        if (resultado.intentos <= 1) {
-            puntaje += PUNTOS_PRIMER_INTENTO;
-        } else {
-            puntaje += PUNTOS_SEGUNDO_INTENTO;
-        }
+        aciertos++;
+        
+        // Seleccionamos puntos base según los intentos
+        const puntosBase = (resultado.intentos <= 1) ? PUNTOS_PRIMER_INTENTO : PUNTOS_SEGUNDO_INTENTO;
+        
+        // Calculamos la penalización por pistas (no puede restar más de los puntos ganados ni bajar de 0)
+        const descuentoPistas = pistasActuales * PENALIZACION_PISTA;
+        const puntosPregunta = Math.max(0, puntosBase - descuentoPistas);
+        
+        puntaje += puntosPregunta;
     }
 
-    // Actualizamos la propiedad global de la app para que la interfaz la muestre
+    // Reiniciamos el contador de pistas para la siguiente pregunta
+    pistasActuales = 0;
+
+    // Actualizamos las propiedades globales de la app para la interfaz
     app.puntaje = puntaje;
+    app.aciertos = aciertos;
 
-    // Si el puntaje actual supera el récord almacenado, lo actualizamos
-    if (puntaje > obtenerRecord()) {
+    // Evaluamos si se rompió el récord
+    const recordActual = obtenerRecord();
+    if (puntaje > recordActual) {
         guardarRecord(puntaje);
+        esNuevoRecord = true;
     }
+}
+
+/**
+ * Devuelve un resumen detallado del desempeño al terminar la partida.
+ * @param {Object} app - Objeto compartido de la aplicación.
+ * @returns {Object} { puntaje, aciertos, total, record, nuevoRecord }
+ */
+export function obtenerResumen(app) {
+    const total = (app.preguntas && Array.isArray(app.preguntas)) ? app.preguntas.length : 10;
+    return {
+        puntaje: puntaje,
+        aciertos: aciertos,
+        total: total,
+        record: obtenerRecord(),
+        nuevoRecord: esNuevoRecord
+    };
 }
