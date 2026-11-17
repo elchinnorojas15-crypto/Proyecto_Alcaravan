@@ -1,18 +1,19 @@
 // ==========================================
-// Módulo 4: Progreso y Récord (Contrato v2)
+// Módulo 4: Progreso y Récord (Contrato v3)
 // ==========================================
-// main.js llama a registrar() una vez por pregunta, 
-// registrarPista() cuando se usa una pista, y obtenerResumen() al finalizar.
+// Gestiona el puntaje, penalización por pistas, historial detallado por pregunta,
+// preguntas falladas y persistencia del récord en localStorage.
 
 const CLAVE_RECORD = "alcaravan_record"; // Clave fija exigida para localStorage
 const PUNTOS_PRIMER_INTENTO = 10;        // Puntos base si acierta al 1er intento
 const PUNTOS_SEGUNDO_INTENTO = 5;        // Puntos base si acierta al 2do intento
 const PENALIZACION_PISTA = 2;            // Puntos que resta cada pista usada
 
-let puntaje = 0;      // Acumulador del puntaje de la partida actual
-let aciertos = 0;     // Contador de respuestas correctas
-let pistasActuales = 0; // Conteo de pistas usadas en la pregunta en curso
-let esNuevoRecord = false; // Bandera para indicar si se rompió el récord en la partida
+let puntaje = 0;             // Acumulador del puntaje de la partida actual
+let aciertos = 0;            // Contador de respuestas correctas
+let pistasActuales = 0;      // Conteo de pistas usadas en la pregunta en curso
+let esNuevoRecord = false;   // Bandera para indicar si se rompió el récord
+let historialPreguntas = []; // Historial detallado por pregunta
 
 /**
  * Inicializa o reinicia el módulo al comenzar una partida o nivel.
@@ -23,6 +24,7 @@ export function iniciar(app) {
     aciertos = 0;
     pistasActuales = 0;
     esNuevoRecord = false;
+    historialPreguntas = [];
     app.puntaje = 0;
     app.aciertos = 0;
 }
@@ -62,38 +64,45 @@ function guardarRecord(valor) {
 }
 
 /**
- * Registra el resultado de la pregunta actual, actualiza el puntaje 
- * aplicando penalización por pistas y evalúa si se rompió el récord.
- * @param {Object} app - Objeto compartido (usa app.indice para detectar juegos nuevos).
+ * Registra el resultado de la pregunta actual, calcula puntos con penalización por pistas,
+ * almacena el historial y evalúa si se rompió el récord.
+ * @param {Object} app - Objeto compartido.
  * @param {Object} resultado - Contiene { ok, valida, mensaje, intentos }.
  * @param {Object} pregunta - Datos de la pregunta evaluada.
  */
 export function registrar(app, resultado, pregunta) {
-    // Si estamos en la primera pregunta (indice 0), reiniciamos contadores de la partida.
     if (app.indice === 0) {
         puntaje = 0;
         aciertos = 0;
         esNuevoRecord = false;
+        historialPreguntas = [];
     }
 
-    // Si la respuesta fue correcta (ok: true)
-    if (resultado && resultado.ok) {
+    let puntosPregunta = 0;
+    const intentosUsados = resultado && resultado.intentos ? resultado.intentos : 1;
+    const fueExitosa = resultado && resultado.ok;
+
+    if (fueExitosa) {
         aciertos++;
-        
-        // Seleccionamos puntos base según los intentos
-        const puntosBase = (resultado.intentos <= 1) ? PUNTOS_PRIMER_INTENTO : PUNTOS_SEGUNDO_INTENTO;
-        
-        // Calculamos la penalización por pistas (no puede restar más de los puntos ganados ni bajar de 0)
+        const puntosBase = (intentosUsados <= 1) ? PUNTOS_PRIMER_INTENTO : PUNTOS_SEGUNDO_INTENTO;
         const descuentoPistas = pistasActuales * PENALIZACION_PISTA;
-        const puntosPregunta = Math.max(0, puntosBase - descuentoPistas);
-        
+        puntosPregunta = Math.max(0, puntosBase - descuentoPistas);
         puntaje += puntosPregunta;
     }
+
+    // Almacenamos el detalle de esta pregunta en el historial
+    historialPreguntas.push({
+        pregunta: pregunta,
+        intentos: intentosUsados,
+        pistas: pistasActuales,
+        puntos: puntosPregunta,
+        ok: fueExitosa
+    });
 
     // Reiniciamos el contador de pistas para la siguiente pregunta
     pistasActuales = 0;
 
-    // Actualizamos las propiedades globales de la app para la interfaz
+    // Actualizamos las propiedades globales de la app
     app.puntaje = puntaje;
     app.aciertos = aciertos;
 
@@ -106,17 +115,22 @@ export function registrar(app, resultado, pregunta) {
 }
 
 /**
- * Devuelve un resumen detallado del desempeño al terminar la partida.
+ * Devuelve un resumen detallado del desempeño al terminar la partida,
+ * incluyendo historial por pregunta, preguntas falladas y estado del récord.
  * @param {Object} app - Objeto compartido de la aplicación.
- * @returns {Object} { puntaje, aciertos, total, record, nuevoRecord }
+ * @returns {Object} { puntaje, aciertos, total, record, nuevoRecord, historial, falladas }
  */
 export function obtenerResumen(app) {
-    const total = (app.preguntas && Array.isArray(app.preguntas)) ? app.preguntas.length : 10;
+    const total = (app.preguntas && Array.isArray(app.preguntas)) ? app.preguntas.length : historialPreguntas.length;
+    const falladas = historialPreguntas.filter(h => !h.ok).map(h => h.pregunta);
+
     return {
         puntaje: puntaje,
         aciertos: aciertos,
         total: total,
         record: obtenerRecord(),
-        nuevoRecord: esNuevoRecord
+        nuevoRecord: esNuevoRecord,
+        historial: [...historialPreguntas],
+        falladas: falladas
     };
 }
