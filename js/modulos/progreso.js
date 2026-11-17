@@ -1,8 +1,17 @@
-// ==========================================
-// Módulo 4: Progreso y Récord (Contrato v3)
-// ==========================================
-// Gestiona el puntaje, penalización por pistas, historial detallado por pregunta,
-// preguntas falladas y persistencia del récord en localStorage.
+/**
+ * @file progreso.js
+ * @description Módulo 4: Progreso, puntaje, penalización por pistas, historial y persistencia de récords para Quiz Alcaraván.
+ * @author Franklin Andrés Yépez López (Franklin05-x)
+ * 
+ * Cómo se usa:
+ * - iniciar(app): Reinicia los contadores y variables de progreso al comenzar una partida o nivel.
+ * - registrarPista(app): Incrementa el contador de pistas solicitadas en la pregunta actual.
+ * - obtenerRecord(): Consulta el récord histórico almacenado de forma persistente en localStorage.
+ * - registrar(app, resultado, pregunta): Evalúa el acierto, aplica penalización de 2 puntos por pista usada (sin bajar de 0),
+ *   calcula los puntos según los intentos, almacena el historial detallado por pregunta y evalúa si se rompió el récord.
+ * - obtenerResumen(app): Retorna un objeto con el puntaje total, aciertos, total de preguntas, récord actual,
+ *   bandera de nuevo récord, historial completo y lista de preguntas falladas.
+ */
 
 const CLAVE_RECORD = "alcaravan_record"; // Clave fija exigida para localStorage
 const PUNTOS_PRIMER_INTENTO = 10;        // Puntos base si acierta al 1er intento
