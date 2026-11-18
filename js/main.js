@@ -118,7 +118,11 @@ function comprobar() {
   if (!r.valida) { feedback("aviso", r.mensaje); return; }
 
   app.intentos++;
-  grafica.mostrarRespuesta(app, latex, r);
+  try {
+    grafica.mostrarRespuesta(app, latex, r);
+  } catch (error) {
+    console.warn("La gráfica no pudo dibujar la respuesta:", error);
+  }
 
   if (r.ok) {
     app.aciertos++;
@@ -173,7 +177,11 @@ function mostrarRevision(i) {
   $("siguiente").hidden = false;
 
   grafica.mostrarPregunta(app, p);
-  grafica.mostrarRespuesta(app, reg.respuesta, reg.resultado);
+  try {
+    grafica.mostrarRespuesta(app, reg.respuesta, reg.resultado);
+  } catch (error) {
+    console.warn("La gráfica no pudo dibujar la respuesta:", error);
+  }
 }
 
 function anterior() {
