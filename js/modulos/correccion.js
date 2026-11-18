@@ -8,6 +8,14 @@ const PUNTOS = [-2.7, -1.3, -0.4, 0.6, 1.9, 3.2, 4.5];
 const TOLERANCIA = 1e-6; // relativa. OJO: el documento traía 1e6 por error.
 const MINIMO_COMPARADOS = 3;
 
+// En la forma canónica de Compute Engine 0.173, (x-1)(x+1) da "Multiply",
+// (x+1)^2 da "Power" y x^2-1 da "Add". El signo menos delante se ignora.
+function esProducto(expr) {
+  if (!expr) return false;
+  if (expr.operator === "Negate") return esProducto(expr.op1);
+  return expr.operator === "Multiply" || expr.operator === "Power";
+}
+
 export function corregir(ce, latexEstudiante, latexCorrecta, tipo) {
   // 1. Respuesta vacía
   if (!latexEstudiante || !latexEstudiante.trim()) {
@@ -53,14 +61,22 @@ export function corregir(ce, latexEstudiante, latexCorrecta, tipo) {
       comparados++;
     }
 
-    return comparados >= MINIMO_COMPARADOS
-      ? { ok: true, valida: true, mensaje: "¡Correcto!" }
-      : { ok: false, valida: false, mensaje: "No se pudo comprobar la respuesta." };
+    if (comparados < MINIMO_COMPARADOS) {
+      return { ok: false, valida: false, mensaje: "No se pudo comprobar la respuesta." };
+    }
+
+    // 5. Factorizar: además del valor, la respuesta debe estar en forma de producto
+    if (tipo === "factorizar" && !esProducto(expr)) {
+      return {
+        ok: false,
+        valida: true,
+        mensaje: "Tu expresión es equivalente, pero falta factorizarla.",
+      };
+    }
+
+    return { ok: true, valida: true, mensaje: "¡Correcto!" };
   } catch (error) {
     console.warn("corregir():", error);
     return { ok: false, valida: false, mensaje: "No se pudo comprobar la respuesta." };
   }
 }
-
-// El parámetro `tipo` todavía no se usa. En el issue #23, para "factorizar"
-// se exigirá además que la respuesta sea un producto.
