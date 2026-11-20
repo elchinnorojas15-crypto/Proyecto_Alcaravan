@@ -13,11 +13,28 @@ export function iniciar(app) {
   obtenerTablero(app);
 }
 
+function crearCurva(tablero, expresion, atributos) {
+  const funcion = compile(expresion);
+  return tablero.create(
+    "functiongraph",
+    [
+      (x) => {
+        const valor = funcion.run({ x });
+        return typeof valor === "number" && Number.isFinite(valor) ? valor : NaN;
+      },
+      -10,
+      10,
+    ],
+    atributos,
+  );
+}
+
 export function mostrarPregunta(app, pregunta) {
   const tablero = obtenerTablero(app);
-  const curvaAnterior = curvasPorTablero.get(tablero);
-  if (curvaAnterior) {
-    tablero.removeObject(curvaAnterior);
+  const curvasAnteriores = curvasPorTablero.get(tablero);
+  if (curvasAnteriores) {
+    if (curvasAnteriores.apoyo) tablero.removeObject(curvasAnteriores.apoyo);
+    if (curvasAnteriores.respuesta) tablero.removeObject(curvasAnteriores.respuesta);
     curvasPorTablero.delete(tablero);
   }
 
@@ -29,22 +46,33 @@ export function mostrarPregunta(app, pregunta) {
   if (!expresion.isValid) {
     throw new Error(`Función de apoyo no válida: ${pregunta.funcionApoyo}`);
   }
-  const funcion = compile(expresion);
-  const curva = tablero.create(
-    "functiongraph",
-    [
-      (x) => {
-        const valor = funcion.run({ x });
-        return typeof valor === "number" && Number.isFinite(valor) ? valor : NaN;
-      },
-      -10,
-      10,
-    ],
+  const apoyo = crearCurva(
+    tablero,
+    expresion,
     { strokeColor: "#2563eb", strokeWidth: 3 },
   );
-  curvasPorTablero.set(tablero, curva);
+  curvasPorTablero.set(tablero, { apoyo, respuesta: null });
 }
 
 export function mostrarRespuesta(app, respuesta, resultado) {
-  // La respuesta del estudiante no modifica la curva de apoyo.
+  if (!resultado || resultado.valida !== true || typeof respuesta !== "string") return;
+
+  const tablero = obtenerTablero(app);
+  let expresion;
+  try {
+    expresion = app.ce.parse(respuesta);
+  } catch {
+    return;
+  }
+  if (!expresion.isValid) return;
+
+  const curvas = curvasPorTablero.get(tablero) || { apoyo: null, respuesta: null };
+  if (curvas.respuesta) tablero.removeObject(curvas.respuesta);
+
+  curvas.respuesta = crearCurva(
+    tablero,
+    expresion,
+    { strokeColor: "#d97706", strokeWidth: 3, dash: 2 },
+  );
+  curvasPorTablero.set(tablero, curvas);
 }
