@@ -19,6 +19,8 @@ tipo = "evaluar" | "simplificar" | "factorizar" | "pendiente"
 - iniciar(app)
 - mostrarPregunta(app, pregunta)
 - mostrarRespuesta(app, respuesta, resultado)
+  - Dibuja la respuesta del estudiante solo cuando `resultado.valida` es `true`.
+  - La distingue de la función de apoyo con una curva ámbar y discontinua; al cambiar de pregunta se retiran ambas curvas anteriores.
 
 ## progreso.js (Progreso)
 - iniciar(app)
