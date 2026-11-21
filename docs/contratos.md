@@ -7,9 +7,11 @@
 - iniciar(app)
 - obtenerPreguntas(nivel) -> Array<Pregunta>
 
-Pregunta = { id, nivel, tipo, enunciado, solucion, funcionApoyo, pista, explicacion }
+Pregunta = { id, nivel, tipo, enunciado, solucion, funcionApoyo, funcionGrafica?, pista, explicacion }
 tipo = "evaluar" | "simplificar" | "factorizar" | "pendiente"
-(enunciado, solucion y funcionApoyo van en LaTeX)
+(enunciado, solucion, funcionApoyo y funcionGrafica van en LaTeX)
+- `funcionGrafica` es la expresión en LaTeX que se dibuja cuando difiere de `funcionApoyo`.
+- Las preguntas de tipo `pendiente` deben incluir `funcionGrafica` con la recta `y=f(x)` correspondiente.
 
 ## correccion.js (Corrección)
 - corregir(ce, latexEstudiante, latexCorrecta, tipo) -> { ok, valida, mensaje }
@@ -18,9 +20,12 @@ tipo = "evaluar" | "simplificar" | "factorizar" | "pendiente"
 ## grafica.js (Gráfica)
 - iniciar(app)
 - mostrarPregunta(app, pregunta)
+  - Dibuja `funcionGrafica` en preguntas de pendiente y `funcionApoyo` en las demás.
 - mostrarRespuesta(app, respuesta, resultado)
   - Dibuja la respuesta del estudiante solo cuando `resultado.valida` es `true`.
   - La distingue de la función de apoyo con una curva ámbar y discontinua; al cambiar de pregunta se retiran ambas curvas anteriores.
+  - Las curvas omiten valores fuera del dominio real o no finitos, como en raíces y fracciones.
+  - La leyenda muestra la función de la pregunta y la respuesta solo cuando es válida.
 
 ## progreso.js (Progreso)
 - iniciar(app)

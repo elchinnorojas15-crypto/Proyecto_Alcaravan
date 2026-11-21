@@ -72,6 +72,7 @@ const PREGUNTAS = [
     enunciado: "\\text{Halla la pendiente de la recta que pasa por } (1,2) \\text{ y } (3,6)",
     solucion: "2",
     funcionApoyo: "\\frac{y_2-y_1}{x_2-x_1}",
+    funcionGrafica: "2x",
     pista: "Usa la fórmula de pendiente: m = (y2 - y1) / (x2 - x1).",
     explicacion: "$m = \\frac{6-2}{3-1} = \\frac{4}{2} = 2.$"
   },
@@ -102,6 +103,7 @@ const PREGUNTAS = [
     enunciado: "\\text{Halla la pendiente de la recta } y = 5x - 3",
     solucion: "5",
     funcionApoyo: "y = mx + b",
+    funcionGrafica: "5x-3",
     pista: "Identifica el número que multiplica a la letra x.",
     explicacion: "En la ecuación de la recta $y = mx + b$, $m$ es la pendiente. Así, $m = 5.$"
   },
