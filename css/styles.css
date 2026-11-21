@@ -111,3 +111,21 @@ math-field:focus-within{border-color:var(--secondary);box-shadow:0 0 0 3px rgba(
 /* Pie */
 footer{background:#efeeea;border-top:1px solid var(--line);color:var(--muted);font:500 13px/18px var(--f-ui);text-align:center;padding:16px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* Ajustes de contraste, foco y estados (Issue #15) */
+:root{
+  --accent-dark:#c94300; 
+  --ok:#0f7542;          
+}
+
+.marca:hover{background:rgba(255,255,255,.1)}
+.marca:active{background:rgba(255,255,255,.18)}
+
+.btn-primary:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+.btn-sec:active:not(:disabled){background:var(--deep)}
+.btn-ghost:active:not(:disabled){background:rgba(2,92,180,.16)}
+
+.nivel-card:focus-within{border-color:var(--secondary);box-shadow:var(--sh2)}
+
+math-field:hover:not([read-only]):not([disabled]){border-color:var(--secondary)}
+math-field[disabled],math-field[aria-disabled="true"]{background:var(--sand);opacity:.65;cursor:not-allowed}
