@@ -204,6 +204,106 @@ const PREGUNTAS = [
     funcionApoyo: "2x(x^2 - 3x + 4)",
     pista: "Multiplica el término 2x por cada uno de los elementos dentro del paréntesis (propiedad distributiva).",
     explicacion: "2x(x²) - 2x(3x) + 2x(4) = 2x³ - 6x² + 8x."
+  },
+  {
+    id: "n3-01",
+    nivel: 3,
+    tipo: "factorizar",
+    enunciado: "\\text{Factoriza completamente: } 2x^3-18x",
+    solucion: "2x(x-3)(x+3)",
+    funcionApoyo: "2x^3-18x",
+    pista: "Primero extrae el factor común 2x; luego aplica diferencia de cuadrados al binomio restante.",
+    explicacion: "2x³ - 18x = 2x(x² - 9) = 2x(x - 3)(x + 3)."
+  },
+  {
+    id: "n3-02",
+    nivel: 3,
+    tipo: "simplificar",
+    enunciado: "\\text{Simplifica la expresión racional: } \\frac{2x^2+5x-3}{x+3}",
+    solucion: "2x-1",
+    funcionApoyo: "\\frac{2x^2+5x-3}{x+3}",
+    pista: "Factoriza el trinomio del numerador y cancela el factor común con el denominador.",
+    explicacion: "2x² + 5x - 3 = (2x - 1)(x + 3). Al dividir entre (x + 3) queda 2x - 1."
+  },
+  {
+    id: "n3-03",
+    nivel: 3,
+    tipo: "evaluar",
+    enunciado: "\\text{Si } f(x)=2x^3-3x^2+4x-1, \\text{ calcula } f(-2)",
+    solucion: "-37",
+    funcionApoyo: "2x^3-3x^2+4x-1",
+    pista: "Sustituye x por -2 cuidando los signos: (-2)³ = -8 y (-2)² = 4.",
+    explicacion: "f(-2) = 2(-8) - 3(4) + 4(-2) - 1 = -16 - 12 - 8 - 1 = -37."
+  },
+  {
+    id: "n3-04",
+    nivel: 3,
+    tipo: "pendiente",
+    enunciado: "\\text{Halla la pendiente de la recta } 6x + 2y - 10 = 0",
+    solucion: "-3",
+    funcionApoyo: "-3x+5",
+    pista: "Despeja la variable y para llevar la ecuación a la forma y = mx + b.",
+    explicacion: "2y = -6x + 10, por lo tanto y = -3x + 5. La pendiente es m = -3."
+  },
+  {
+    id: "n3-05",
+    nivel: 3,
+    tipo: "factorizar",
+    enunciado: "\\text{Factoriza completamente: } x^4-16",
+    solucion: "(x-2)(x+2)(x^2+4)",
+    funcionApoyo: "x^4-16",
+    pista: "Aplica diferencia de cuadrados dos veces seguidas, ya que x⁴ - 16 = (x²)² - 4².",
+    explicacion: "x⁴ - 16 = (x² - 4)(x² + 4) = (x - 2)(x + 2)(x² + 4)."
+  },
+  {
+    id: "n3-06",
+    nivel: 3,
+    tipo: "simplificar",
+    enunciado: "\\text{Simplifica completamente: } (2x+3)^2 - (2x-1)^2",
+    solucion: "16x+8",
+    funcionApoyo: "(2x+3)^2-(2x-1)^2",
+    pista: "Desarrolla ambos binomios al cuadrado y distribuye el signo negativo al segundo resultado.",
+    explicacion: "(4x² + 12x + 9) - (4x² - 4x + 1) = 4x² + 12x + 9 - 4x² + 4x - 1 = 16x + 8."
+  },
+  {
+    id: "n3-07",
+    nivel: 3,
+    tipo: "evaluar",
+    enunciado: "\\text{Si } g(x)=\\frac{x^2-4x+3}{x+1}, \\text{ calcula } g(-3)",
+    solucion: "-12",
+    funcionApoyo: "\\frac{x^2-4x+3}{x+1}",
+    pista: "Evalúa primero el numerador y el denominador por separado sustituyendo x por -3.",
+    explicacion: "Numerador: (-3)² - 4(-3) + 3 = 9 + 12 + 3 = 24. Denominador: -3 + 1 = -2. Resultado: 24 / (-2) = -12."
+  },
+  {
+    id: "n3-08",
+    nivel: 3,
+    tipo: "pendiente",
+    enunciado: "\\text{Halla la pendiente de la recta que pasa por } (-3, 10) \\text{ y } (1, -6)",
+    solucion: "-4",
+    funcionApoyo: "-4x-2",
+    pista: "Usa m = (y2 - y1) / (x2 - x1) prestando atención al doble signo negativo en el denominador.",
+    explicacion: "m = (-6 - 10) / (1 - (-3)) = -16 / 4 = -4."
+  },
+  {
+    id: "n3-09",
+    nivel: 3,
+    tipo: "factorizar",
+    enunciado: "\\text{Factoriza el trinomio: } 3x^2-11x-4",
+    solucion: "(3x+1)(x-4)",
+    funcionApoyo: "3x^2-11x-4",
+    pista: "Descompón el término central -11x como -12x + x y factoriza por agrupación.",
+    explicacion: "3x² - 12x + x - 4 = 3x(x - 4) + 1(x - 4) = (3x + 1)(x - 4)."
+  },
+  {
+    id: "n3-10",
+    nivel: 3,
+    tipo: "simplificar",
+    enunciado: "\\text{Simplifica: } (x-2)(x^2+2x+4) + 8",
+    solucion: "x^3",
+    funcionApoyo: "(x-2)(x^2+2x+4)+8",
+    pista: "Multiplica el binomio por el trinomio (o reconoce la identidad de diferencia de cubos a³ - b³).",
+    explicacion: "(x - 2)(x² + 2x + 4) + 8 = (x³ - 8) + 8 = x³."
   }
 ];
 
