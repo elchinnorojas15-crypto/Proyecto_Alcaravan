@@ -54,6 +54,7 @@ export function mostrarPregunta(app, pregunta) {
     curvasPorTablero.delete(tablero);
   }
   actualizarLeyenda("");
+  mostrarRetroalimentacion(null);
 
   if (!pregunta || typeof pregunta.funcionApoyo !== "string") {
     throw new Error("La pregunta debe incluir una función de apoyo en LaTeX.");
@@ -75,8 +76,23 @@ export function mostrarPregunta(app, pregunta) {
   curvasPorTablero.set(tablero, { apoyo, respuesta: null, funcionApoyo });
   actualizarLeyenda(funcionApoyo);
 }
+function mostrarRetroalimentacion(resultado) {
+  const caja = document.getElementById("box");
+  const aviso = document.getElementById("retroalimentacion");
+  if (!caja || !aviso) return;
 
+  caja.classList.remove("correcto", "incorrecto");
+
+  if (!resultado || !resultado.valida) {
+    aviso.textContent = resultado?.mensaje ?? "";
+    return;
+  }
+
+  caja.classList.add(resultado.ok ? "correcto" : "incorrecto");
+  aviso.textContent = resultado.ok ? "✔ Correcto" : "✖ Incorrecto";
+}
 export function mostrarRespuesta(app, respuesta, resultado) {
+  mostrarRetroalimentacion(resultado);
   if (!resultado || resultado.valida !== true || typeof respuesta !== "string") return;
 
   const tablero = obtenerTablero(app);
