@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Alcaraván · Álgebra y Funciones</title>
 <link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/grafica.css">
 <link rel="stylesheet" href="vendor/jsxgraph/jsxgraph.css">
 </head>
 <body>
@@ -117,6 +118,18 @@
 
       <aside class="card grafica" aria-label="Gráfica de la pregunta">
         <h2>Gráfica</h2>
+        <div class="leyenda-grafica" aria-label="Funciones mostradas en la gráfica" aria-live="polite">
+          <div class="entrada-leyenda">
+            <span class="muestra-linea muestra-apoyo" aria-hidden="true"></span>
+            <span>Función de la pregunta:</span>
+            <math-field id="leyenda-apoyo" read-only aria-label="Función de la pregunta"></math-field>
+          </div>
+          <div id="leyenda-respuesta-fila" class="entrada-leyenda" hidden>
+            <span class="muestra-linea muestra-respuesta" aria-hidden="true"></span>
+            <span>Tu respuesta:</span>
+            <math-field id="leyenda-respuesta" read-only aria-label="Tu respuesta"></math-field>
+          </div>
+        </div>
         <div id="box" class="jxgbox"></div>
       </aside>
     </div>
