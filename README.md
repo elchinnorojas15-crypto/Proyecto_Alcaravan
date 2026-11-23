@@ -8,7 +8,7 @@ Proyecto 4 del curso de Matemática interactiva con Git. Pensado para presentars
 
 | Integrante | Usuario | Rol y módulo |
 |---|---|---|
-| Leandro Rojas | `elchinnorojas15-crypto` | Líder: interfaz, integración (`index.html`, `main.js`) y revisión |
+| Leandro Rojas | `elchinnorojas15-crypto` Y 'leochinno07' | Líder: interfaz, integración (`index.html`, `main.js`) y revisión |
 | Radimir Alessandro Castillo Giraldo | `Radi-castillo` | Módulo 1: Banco de preguntas |
 | Enmanuel Osuna | `osunacode` | Módulo 2: Corrección y pruebas |
 | José Chávez | `Dragosus` | Módulo 3: Gráfica |
