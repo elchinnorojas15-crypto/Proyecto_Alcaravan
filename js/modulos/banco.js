@@ -1,8 +1,31 @@
-// js/modulos/banco.js
-// Módulo 1: Banco de preguntas
-// Contrato: ver docs/contratos.md
-// Todos los textos matemáticos van en LaTeX. En JavaScript la barra
-// invertida se escribe doble: "\\frac", "\\text".
+/**
+ * @file banco.js
+ * @description Módulo 1: Banco de preguntas matemáticas para Quiz Alcaraván.
+ * Contiene 30 preguntas distribuidas en 3 niveles de dificultad (10 por nivel)
+ * y expone las funciones definidas en el contrato (docs/contratos.md).
+ * @author Radimir Castillo (Radi-castillo)
+ *
+ * Cómo se usa:
+ * - iniciar(app): Punto de entrada del ciclo de vida del módulo al iniciar una partida.
+ * - obtenerPreguntas(nivel): Filtra y devuelve un arreglo con copias de las 10 preguntas
+ *   correspondientes al nivel indicado (1, 2 o 3), protegiendo el arreglo original contra mutaciones.
+ *
+ * Estructura de cada pregunta (contrato):
+ * - id           {string} : Identificador único con patrón "n<nivel>-<numero>" (n1-01 a n3-10).
+ * - nivel        {number} : Nivel de dificultad (1 = básico, 2 = intermedio, 3 = avanzado).
+ * - tipo         {string} : Categoría usada por correccion.js ("evaluar", "simplificar",
+ *                           "factorizar" o "pendiente").
+ * - enunciado    {string} : Planteamiento del ejercicio en LaTeX (barras escapadas con "\\").
+ * - solucion     {string} : Respuesta esperada en LaTeX usando únicamente la variable "x"
+ *                           (requisito de Compute Engine en correccion.js).
+ * - funcionApoyo {string} : Expresión en LaTeX que grafica grafica.js en el tablero JSXGraph.
+ * - pista        {string} : Ayuda progresiva para el estudiante (en texto plano para evitar
+ *                           conflictos de renderizado en la interfaz).
+ * - explicacion  {string} : Resolución paso a paso mostrada al finalizar o agotar intentos.
+ *
+ * Nota sobre LaTeX en JavaScript:
+ * Las barras invertidas deben escribirse dobles ("\\frac", "\\text", "\\cdot").
+ */
 
 const PREGUNTAS = [
   {
@@ -309,10 +332,25 @@ const PREGUNTAS = [
   }
 ];
 
+/**
+ * Inicializa el módulo del banco de preguntas al arrancar la aplicación o una partida.
+ * Se mantiene para cumplir con el contrato común de módulos en docs/contratos.md;
+ * actualmente el banco es estático y no requiere configuración de estado inicial.
+ * @param {Object} app - Objeto de estado compartido de la aplicación.
+ */
 export function iniciar(app) {
   // Por ahora no necesita preparar nada.
 }
 
+/**
+ * Obtiene las preguntas correspondientes a un nivel de dificultad específico.
+ * Devuelve copias superficiales ({ ...p }) de cada objeto para garantizar que otros
+ * módulos (como main.js o progreso.js) puedan manipularlos sin alterar el arreglo PREGUNTAS.
+ *
+ * @param {number} nivel - Nivel solicitado (1, 2 o 3).
+ * @returns {Array<Object>} Arreglo con las copias de las preguntas del nivel indicado
+ *                          (10 elementos por nivel válido; arreglo vacío si el nivel no existe).
+ */
 export function obtenerPreguntas(nivel) {
   // Devuelve copias para que nadie modifique el banco original.
   return PREGUNTAS.filter((p) => p.nivel === nivel).map((p) => ({ ...p }));
